@@ -7,6 +7,15 @@ THIRD_PARTY_BIN = $(THIRD_PARTY)/bin
 
 all: third_party_all
 
+third_party_minimal:    path \
+                        fastapprox \
+                        eigen \
+                        libconfig \
+                        cuckoo \
+                        leveldb \
+                        boost 
+
+
 third_party_core: path \
 	                gflags \
                   glog \
@@ -49,7 +58,7 @@ boost: path $(BOOST_INCLUDE)
 $(BOOST_INCLUDE): $(BOOST_SRC)
 	tar jxf $< -C $(THIRD_PARTY_SRC)
 	cd $(basename $(basename $(THIRD_PARTY_SRC)/$(notdir $<))); \
-	./bootstrap.sh \
+	./bootstrap.sh --with-libraries=system,thread \
 		--prefix=$(THIRD_PARTY); \
 	./b2 install
 
