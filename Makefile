@@ -188,7 +188,7 @@ yaml-cpp: boost $(YAMLCPP_LIB)
 $(YAMLCPP_LIB): $(YAMLCPP_SRC)
 	tar zxf $< -C $(THIRD_PARTY_SRC)
 	cd $(basename $(basename $(THIRD_PARTY_SRC)/$(notdir $<))); \
-	make -f $(YAMLCPP_MK) BOOST_PREFIX=$(THIRD_PARTY) TARGET=$@; \
+	make -f $(YAMLCPP_MK) CFLAGS=-fPIC BOOST_PREFIX=$(THIRD_PARTY) TARGET=$@; \
 	cp -r include/* $(THIRD_PARTY_INCLUDE)/
 
 # =================== oprofile ===================
@@ -233,7 +233,7 @@ $(SNAPPY_LIB): $(SNAPPY_SRC)
 
 # ==================== zeromq ====================
 
-ZMQ_SRC = $(THIRD_PARTY_CENTRAL)/zeromq-3.2.5.tar.gz
+ZMQ_SRC = $(THIRD_PARTY_CENTRAL)/zeromq-4.1.4.tar.gz
 ZMQ_LIB = $(THIRD_PARTY_LIB)/libzmq.so
 
 zeromq: path $(ZMQ_LIB)
@@ -241,7 +241,8 @@ zeromq: path $(ZMQ_LIB)
 $(ZMQ_LIB): $(ZMQ_SRC)
 	tar zxf $< -C $(THIRD_PARTY_SRC)
 	cd $(basename $(basename $(THIRD_PARTY_SRC)/$(notdir $<))); \
-	./configure --prefix=$(THIRD_PARTY); \
+	export CFLAGS=-fPIC; \
+        ./configure --prefix=$(THIRD_PARTY) --with-libsodium=no --with-libgssapi_krb5=no; \
 	make install
 	cp $(THIRD_PARTY_CENTRAL)/zmq.hpp $(THIRD_PARTY_INCLUDE)
 
